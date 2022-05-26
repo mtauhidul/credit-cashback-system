@@ -1,0 +1,40 @@
+.mainTableContainer {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 88.8vh;
+    overflow-x: hidden;
+
+    .mainTableHeader {
+        background-color: var(--PRIMARY);
+        width: 100%;
+        max-width: 824px;
+        text-align: center;
+        height: 66px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+
+        h1 {
+            font-size: 36px !important;
+            line-height: 40px !important;
+        }
+
+        @media (max-width: 420px) {
+            h1 {
+                font-size: 20px !important;
+                line-height: 24px !important;
+            }
+        }
+    }
+
+
+    .tableContainer {
+        width: 100%;
+        max-width: 780px;
+        padding: 20px;
+    }
+}

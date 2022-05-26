@@ -1,0 +1,41 @@
+.container {
+    min-height: 91vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    max-width: 100vw;
+    overflow-x: hidden;
+
+    form {
+        height: auto;
+        min-width: 300px;
+        max-width: 380px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 50px;
+        border-radius: 8px;
+        box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 56px;
+        overflow-x: hidden;
+
+
+        .textField {
+            width: 100%;
+            margin-bottom: 20px;
+            background-color: #F2F2F2;
+        }
+
+        button {
+            width: 100%;
+            height: auto;
+            font-size: 18px;
+        }
+
+        .clickable {
+            color: var(--PRIMARY);
+            font-weight: 700;
+            cursor: pointer;
+        }
+    }
+}
