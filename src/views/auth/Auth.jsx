@@ -2,7 +2,10 @@ import GoogleIcon from '@mui/icons-material/Google';
 import { Button, TextField } from '@mui/material';
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
+import { useSelector } from 'react-redux';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import ReactTooltip from 'react-tooltip';
+import { selectAllUsers } from '../../store/slices/allUsersSlice';
 import { googleSingIn, login, register } from '../../utils/auth';
 import { validator } from '../../utils/authHelper';
 import { createNewUser } from '../../utils/db';
@@ -22,6 +25,8 @@ const Auth = ({ getSpecificUser, getAllUsers, getAllRows }) => {
     isAuthenticated: false,
   });
 
+  const users = useSelector(selectAllUsers);
+
   const formHelper = (property, value) => {
     const response = validator(property, value);
     if (response !== false) {
@@ -29,7 +34,13 @@ const Auth = ({ getSpecificUser, getAllUsers, getAllRows }) => {
       if (property === 'name') {
         setUser({ ...user, name: response });
       } else if (property === 'userName') {
-        setUser({ ...user, userName: response });
+        const user = users.find((user) => user.userName === response);
+        console.log(user);
+        if (!user) {
+          setUser({ ...user, userName: response });
+        } else {
+          setError('User name already exists');
+        }
       } else if (property === 'email') {
         setUser({ ...user, email: response });
       } else if (property === 'password') {
@@ -140,6 +151,7 @@ const Auth = ({ getSpecificUser, getAllUsers, getAllRows }) => {
 
   return (
     <main className={styles.container}>
+      <ReactTooltip />
       <form id='authForm'>
         <h2>{authType}</h2>
         <br />
@@ -173,13 +185,27 @@ const Auth = ({ getSpecificUser, getAllUsers, getAllRows }) => {
           onBlur={(e) => formHelper('email', e.target.value)}
         />
         <TextField
+          data-html={true}
+          data-tip='<ul><li> ● At least eight characters long</li><li> ● Must have a capital letter</li><li> ● Must have a lowercase letter</li><li> ● Must have a special character</li><li> ● Must have a number</li></ul>'
+          type='password'
           className={styles.textField}
           id='outlined-basic'
           label='Password'
           variant='outlined'
           onBlur={(e) => formHelper('password', e.target.value)}
         />
-        <Button onClick={(e) => formSubmit(e)} variant='contained'>
+        <Button
+          disabled={
+            error === '' &&
+            user.name !== '' &&
+            user.userName !== '' &&
+            user.email !== '' &&
+            user.password !== ''
+              ? false
+              : true
+          }
+          onClick={(e) => formSubmit(e)}
+          variant='contained'>
           Submit
         </Button>
         <br />

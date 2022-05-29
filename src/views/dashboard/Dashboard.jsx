@@ -45,17 +45,19 @@ const Dashboard = ({ getSpecificUser, getAllUsers, getAllRows }) => {
     getAllUsers();
     getAllRows();
     getSpecificUser();
-  }, []);
+  }, [getAllRows, getAllUsers, getSpecificUser]);
 
   const { userid } = useParams();
 
   useEffect(() => {
+    console.log(allUsers);
     const user = allUsers.find((user) => user.id === userid);
     setUserProfile(user);
-    console.log(allUsers);
   }, []);
 
   const loggedUserId = window.localStorage.getItem('uid');
+
+  console.log(userProfile);
 
   return (
     <main className={styles.dashboard}>

@@ -1,7 +1,5 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
 import { Route, Routes } from 'react-router-dom';
-import { selectId, selectIsAuthenticated } from '../store/slices/authSlice';
 import Auth from '../views/auth/Auth';
 import Retrieve from '../views/auth/Retrieve';
 import Dashboard from '../views/dashboard/Dashboard';
@@ -9,11 +7,6 @@ import Home from '../views/home/Home';
 import MainTable from '../views/mainTable/MainTable';
 
 const Routings = ({ getAllRows, getAllUsers, getSpecificUser }) => {
-  const isAuthenticated = useSelector(selectIsAuthenticated);
-  const id = useSelector(selectId);
-  const storedId = window.localStorage.getItem('uid');
-  const storedToken = window.localStorage.getItem('token');
-
   return (
     <Routes>
       <Route path='/' element={<Home />} />

@@ -9,9 +9,10 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import { default as React } from 'react';
+import { default as React, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './mainTable.module.scss';
+import TablePaginationDemo from './TablePaginationDemo';
 
 const SingleTable = ({
   month,
@@ -25,6 +26,17 @@ const SingleTable = ({
   type,
   setSearchText,
 }) => {
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
   return (
     <div style={{ marginTop: '80px' }}>
       <div className={styles.mainTableHeader}>
@@ -85,53 +97,62 @@ const SingleTable = ({
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows?.map((row, index) => (
-              <TableRow
-                key={index}
-                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                <TableCell
-                  as={Link}
-                  to={`/dashboard/${row?.userId}`}
-                  sx={{
-                    minWidth: '100px',
-                    color: 'var(--PRIMARY) ',
-                    fontWeight: '500',
-                  }}
-                  align='center'
-                  component='th'
-                  scope='row'>
-                  {allUsers.find((user) => user.id === row.userId)?.userName} (
-                  {allUsers.find((user) => user.id === row.userId)?.points})
-                </TableCell>
-                <TableCell align='center'>{row.month}</TableCell>
-                <TableCell align='center'>{row.card}</TableCell>
-                <TableCell align='center'>{row.cashback}%</TableCell>
-                <TableCell align='center'>{row.upVote}</TableCell>
-                <TableCell align='center'>{row.downVote}</TableCell>
-                <TableCell className={styles.tdLast} align='right'>
-                  <IconButton
-                    disabled={
-                      row.userId === userId || listedFeedbacks(row.id)
-                        ? true
-                        : false
-                    }
-                    onClick={() => addUpVote(row.id, row.userId)}
-                    aria-label='delete'>
-                    <ThumbUpIcon />
-                  </IconButton>
-                  <IconButton
-                    disabled={
-                      row.userId === userId || listedFeedbacks(row.id)
-                        ? true
-                        : false
-                    }
-                    onClick={() => addDownVote(row.id, row.userId)}
-                    aria-label='delete'>
-                    <ThumbDownIcon />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-            ))}
+            {rows
+              ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              ?.map((row, index) => (
+                <TableRow
+                  key={index}
+                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                  <TableCell
+                    as={Link}
+                    to={`/dashboard/${row?.userId}`}
+                    sx={{
+                      minWidth: '100px',
+                      color: 'var(--PRIMARY) ',
+                      fontWeight: '500',
+                    }}
+                    align='center'
+                    component='th'
+                    scope='row'>
+                    {allUsers.find((user) => user.id === row.userId)?.userName}{' '}
+                    ({allUsers.find((user) => user.id === row.userId)?.points})
+                  </TableCell>
+                  <TableCell align='center'>{row.month}</TableCell>
+                  <TableCell align='center'>{row.card}</TableCell>
+                  <TableCell align='center'>{row.cashback}%</TableCell>
+                  <TableCell align='center'>{row.upVote}</TableCell>
+                  <TableCell align='center'>{row.downVote}</TableCell>
+                  <TableCell className={styles.tdLast} align='right'>
+                    <IconButton
+                      disabled={
+                        row.userId === userId || listedFeedbacks(row.id)
+                          ? true
+                          : false
+                      }
+                      onClick={() => addUpVote(row.id, row.userId)}
+                      aria-label='delete'>
+                      <ThumbUpIcon />
+                    </IconButton>
+                    <IconButton
+                      disabled={
+                        row.userId === userId || listedFeedbacks(row.id)
+                          ? true
+                          : false
+                      }
+                      onClick={() => addDownVote(row.id, row.userId)}
+                      aria-label='delete'>
+                      <ThumbDownIcon />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))}
+            <TablePaginationDemo
+              rows={rows}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              handleChangePage={handleChangePage}
+              handleChangeRowsPerPage={handleChangeRowsPerPage}
+            />
           </TableBody>
         </Table>
       </TableContainer>

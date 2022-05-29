@@ -1,3 +1,4 @@
+import { CircularProgress, TextField } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -5,6 +6,7 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
+import { Box } from '@mui/system';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { typeBasedData } from '../../utils/db';
@@ -40,8 +42,41 @@ export default function Home() {
     'December',
   ];
 
+  useEffect(() => {
+    const categories = [
+      'Restaurants',
+      'Grocery Stores',
+      'Gas Stations',
+      'Travel',
+      'Streaming Services',
+      'Gym Memberships',
+      'Transit',
+      'Medical Stores',
+    ];
+
+    const newRows = [...rows];
+    newRows.map((newRow, index) => {
+      return newRow.type === categories[index];
+    });
+    setRows(newRows);
+  }, []);
+
   const d = new Date();
   let currentMonth = month[d.getMonth()];
+
+  const [searchText, setSearchText] = useState('');
+
+  useEffect(() => {
+    if (searchText) {
+      const newRows = [...rows];
+      const filteredRows = newRows.filter((newRow) =>
+        newRow.card?.toLowerCase().includes(searchText?.toLowerCase())
+      );
+      setRows(filteredRows);
+    } else {
+      getTopRowItems();
+    }
+  }, [searchText]);
 
   return (
     <main className={styles.mainTableContainer}>
@@ -56,6 +91,16 @@ export default function Home() {
         </h1>
       </div>
       <TableContainer className={styles.tableContainer} component={Paper}>
+        <br />
+
+        <TextField
+          sx={{ width: '100%', maxWidth: '960px' }}
+          id='outlined-basic'
+          label='Search card'
+          variant='outlined'
+          onChange={(e) => setSearchText(e.target.value)}
+        />
+        <br />
         <Table sx={{ minWidth: 650 }} aria-label='credit table'>
           <TableHead>
             <TableRow>
@@ -65,167 +110,47 @@ export default function Home() {
               <TableCell align='center'>Cashback</TableCell>
             </TableRow>
           </TableHead>
-          <TableBody>
-            <TableRow
-              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-              <TableCell
-                style={{
-                  color: '#1876D1',
-                  fontWeight: 'bold',
-                  textTransform: 'capitalize',
-                }}
-                as={Link}
-                to='/table/restaurants'
-                align='center'
-                component='th'
-                scope='row'>
-                Restaurants
-              </TableCell>
-              <TableCell align='center'>{currentMonth}</TableCell>
-              <TableCell align='center'>{rows[0]?.card}</TableCell>
-              <TableCell align='center'>{rows[0]?.cashback}%</TableCell>
-            </TableRow>
-
-            <TableRow
-              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-              <TableCell
-                style={{
-                  color: '#1876D1',
-                  fontWeight: 'bold',
-                  textTransform: 'capitalize',
-                }}
-                as={Link}
-                to='/table/grocery_stores'
-                align='center'
-                component='th'
-                scope='row'>
-                Grocery Stores
-              </TableCell>
-              <TableCell align='center'>{currentMonth}</TableCell>
-              <TableCell align='center'>{rows[1]?.card}</TableCell>
-              <TableCell align='center'>{rows[1]?.cashback}%</TableCell>
-            </TableRow>
-
-            <TableRow
-              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-              <TableCell
-                style={{
-                  color: '#1876D1',
-                  fontWeight: 'bold',
-                  textTransform: 'capitalize',
-                }}
-                as={Link}
-                to='/table/gas_stations'
-                align='center'
-                component='th'
-                scope='row'>
-                Gas Stations
-              </TableCell>
-              <TableCell align='center'>{currentMonth}</TableCell>
-              <TableCell align='center'>{rows[2]?.card}</TableCell>
-              <TableCell align='center'>{rows[2]?.cashback}%</TableCell>
-            </TableRow>
-
-            <TableRow
-              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-              <TableCell
-                style={{
-                  color: '#1876D1',
-                  fontWeight: 'bold',
-                  textTransform: 'capitalize',
-                }}
-                as={Link}
-                to='/table/travel'
-                align='center'
-                component='th'
-                scope='row'>
-                Travel
-              </TableCell>
-              <TableCell align='center'>{currentMonth}</TableCell>
-              <TableCell align='center'>{rows[3]?.card}</TableCell>
-              <TableCell align='center'>{rows[3]?.cashback}%</TableCell>
-            </TableRow>
-
-            <TableRow
-              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-              <TableCell
-                style={{
-                  color: '#1876D1',
-                  fontWeight: 'bold',
-                  textTransform: 'capitalize',
-                }}
-                as={Link}
-                to='/table/streaming_services'
-                align='center'
-                component='th'
-                scope='row'>
-                Streaming Services
-              </TableCell>
-              <TableCell align='center'>{currentMonth}</TableCell>
-              <TableCell align='center'>{rows[4]?.card}</TableCell>
-              <TableCell align='center'>{rows[4]?.cashback}%</TableCell>
-            </TableRow>
-
-            <TableRow
-              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-              <TableCell
-                style={{
-                  color: '#1876D1',
-                  fontWeight: 'bold',
-                  textTransform: 'capitalize',
-                }}
-                as={Link}
-                to='/table/gym_memberships'
-                align='center'
-                component='th'
-                scope='row'>
-                Gym Memberships
-              </TableCell>
-              <TableCell align='center'>{currentMonth}</TableCell>
-              <TableCell align='center'>{rows[5]?.card}</TableCell>
-              <TableCell align='center'>{rows[5]?.cashback}%</TableCell>
-            </TableRow>
-
-            <TableRow
-              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-              <TableCell
-                style={{
-                  color: '#1876D1',
-                  fontWeight: 'bold',
-                  textTransform: 'capitalize',
-                }}
-                as={Link}
-                to='/table/transit'
-                align='center'
-                component='th'
-                scope='row'>
-                Transit
-              </TableCell>
-              <TableCell align='center'>{currentMonth}</TableCell>
-              <TableCell align='center'>{rows[6]?.card}</TableCell>
-              <TableCell align='center'>{rows[6]?.cashback}%</TableCell>
-            </TableRow>
-
-            <TableRow
-              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-              <TableCell
-                style={{
-                  color: '#1876D1',
-                  fontWeight: 'bold',
-                  textTransform: 'capitalize',
-                }}
-                as={Link}
-                to='/table/medical_stores'
-                align='center'
-                component='th'
-                scope='row'>
-                Medical Stores
-              </TableCell>
-              <TableCell align='center'>{currentMonth}</TableCell>
-              <TableCell align='center'>{rows[7]?.card}</TableCell>
-              <TableCell align='center'>{rows[7]?.cashback}%</TableCell>
-            </TableRow>
-          </TableBody>
+          {rows ? (
+            <TableBody>
+              {rows.map((row) => {
+                return (
+                  <TableRow
+                    key={row.type}
+                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                    <TableCell
+                      style={{
+                        color: '#1876D1',
+                        fontWeight: 'bold',
+                        textTransform: 'capitalize',
+                      }}
+                      as={Link}
+                      to={`/table/${row.type.toLowerCase()}`}
+                      align='center'
+                      component='th'
+                      scope='row'>
+                      {row?.type}
+                    </TableCell>
+                    <TableCell align='center'>{currentMonth}</TableCell>
+                    <TableCell align='center'>{row?.card}</TableCell>
+                    <TableCell align='center'>{row?.cashback}%</TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          ) : (
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                width: '100%',
+                justifyContent: 'center',
+                textAlign: 'center',
+                margin: '50px auto',
+              }}>
+              <CircularProgress />
+            </Box>
+          )}
         </Table>
       </TableContainer>
     </main>

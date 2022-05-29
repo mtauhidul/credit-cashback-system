@@ -11,7 +11,7 @@ import {
 } from 'firebase/firestore';
 import { app } from './firebase.config';
 
-const db = getFirestore(app);
+export const db = getFirestore(app);
 
 export const createNewUser = async (user, id) => {
   try {
