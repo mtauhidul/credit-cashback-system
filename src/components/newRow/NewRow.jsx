@@ -1,5 +1,7 @@
+import CloseIcon from '@mui/icons-material/Close';
 import {
   FormControl,
+  IconButton,
   InputLabel,
   MenuItem,
   Select,
@@ -141,14 +143,27 @@ export default function NewRow({ getSpecificUser, getAllUsers, getAllRows }) {
         aria-labelledby='modal-modal-title'
         aria-describedby='modal-modal-description'>
         <Box sx={style}>
-          <Typography id='modal-modal-title' variant='h5' component='h2'>
-            Cashback information
-          </Typography>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}>
+            <Typography id='modal-modal-title' variant='h5' component='h2'>
+              Cashback information
+            </Typography>
+            <IconButton onClick={() => handleClose()} aria-label='delete'>
+              <CloseIcon />
+            </IconButton>
+          </div>
           <hr />
           <br />
           <div className={styles.modalInputWrapper}>
             <FormControl fullWidth>
-              <InputLabel id='demo-simple-select-label'>Month</InputLabel>
+              <InputLabel id='demo-simple-select-label'>
+                Select month
+              </InputLabel>
               <Select
                 labelId='demo-simple-select-label'
                 id='demo-simple-select'
@@ -167,7 +182,7 @@ export default function NewRow({ getSpecificUser, getAllUsers, getAllRows }) {
             <TextField
               value={newRow.card}
               id='outlined-basic'
-              label='Card'
+              label='Card name'
               variant='outlined'
               onChange={(e) =>
                 setNewRow({
@@ -176,18 +191,26 @@ export default function NewRow({ getSpecificUser, getAllUsers, getAllRows }) {
                 })
               }
             />
-            <TextField
-              value={newRow.cashback}
-              id='outlined-basic'
-              label='Cashback'
-              variant='outlined'
-              onChange={(e) =>
-                setNewRow({
-                  ...newRow,
-                  cashback: e.target.value,
-                })
-              }
-            />
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}>
+              <TextField
+                value={newRow.cashback}
+                id='outlined-basic'
+                label='Cashback number'
+                variant='outlined'
+                onChange={(e) =>
+                  setNewRow({
+                    ...newRow,
+                    cashback: e.target.value,
+                  })
+                }
+              />
+              <span style={{ fontSize: '30px', marginLeft: '10px' }}>%</span>
+            </div>
             <br />
             <Button
               onClick={() => handleSubmit()}

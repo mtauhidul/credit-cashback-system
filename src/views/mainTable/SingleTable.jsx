@@ -18,7 +18,8 @@ const SingleTable = ({
   month,
   searchData,
   rows,
-  listedFeedbacks,
+  listedFeedbacksUpVotes,
+  listedFeedbacksDownVotes,
   allUsers,
   userId,
   addUpVote,
@@ -124,8 +125,12 @@ const SingleTable = ({
                   <TableCell align='center'>{row.downVote}</TableCell>
                   <TableCell className={styles.tdLast} align='right'>
                     <IconButton
+                      sx={{
+                        color: listedFeedbacksUpVotes(row.id) && '#1876D0',
+                      }}
                       disabled={
-                        row.userId === userId || listedFeedbacks(row.id)
+                        row.userId === userId ||
+                        listedFeedbacksDownVotes(row.id)
                           ? true
                           : false
                       }
@@ -134,8 +139,11 @@ const SingleTable = ({
                       <ThumbUpIcon />
                     </IconButton>
                     <IconButton
+                      sx={{
+                        color: listedFeedbacksDownVotes(row.id) && '#1876D0',
+                      }}
                       disabled={
-                        row.userId === userId || listedFeedbacks(row.id)
+                        row.userId === userId || listedFeedbacksUpVotes(row.id)
                           ? true
                           : false
                       }

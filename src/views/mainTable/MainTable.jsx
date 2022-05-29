@@ -9,7 +9,7 @@ import {
   selectId,
   selectIsAuthenticated,
 } from '../../store/slices/authSlice';
-import { downVote, upVote } from '../../utils/db';
+import { voteNow } from '../../utils/db';
 import styles from './mainTable.module.scss';
 import SingleTable from './SingleTable';
 
@@ -45,7 +45,9 @@ export default function MainTable({
 
   const addUpVote = async (id, ownerId) => {
     if (isAuthenticated && mainId === storedId && storedToken) {
-      const response = await upVote(id, userId, ownerId);
+      const rowId = id;
+      const type = 'upVote';
+      const response = await voteNow(rowId, userId, ownerId, type);
       if (!response) {
         getAllUsers();
         getAllRows();
@@ -58,7 +60,9 @@ export default function MainTable({
 
   const addDownVote = async (id, ownerId) => {
     if (isAuthenticated && mainId === storedId && storedToken) {
-      const response = await downVote(id, userId, ownerId);
+      const rowId = id;
+      const type = 'downVote';
+      const response = await voteNow(rowId, userId, ownerId, type);
       if (!response) {
         getAllUsers();
         getAllRows();
@@ -69,8 +73,17 @@ export default function MainTable({
     }
   };
 
-  const listedFeedbacks = (rowId) => {
-    const check = feedbacks.find((feedback) => feedback === rowId);
+  const listedFeedbacksUpVotes = (rowId) => {
+    const check = feedbacks.find(
+      (feedback) => feedback.rowId === rowId && feedback.type === 'upVote'
+    );
+    return check;
+  };
+
+  const listedFeedbacksDownVotes = (rowId) => {
+    const check = feedbacks.find(
+      (feedback) => feedback.rowId === rowId && feedback.type === 'downVote'
+    );
     return check;
   };
 
@@ -194,7 +207,8 @@ export default function MainTable({
         month={currentMonth}
         searchData={searchData}
         rows={month1}
-        listedFeedbacks={listedFeedbacks}
+        listedFeedbacksUpVotes={listedFeedbacksUpVotes}
+        listedFeedbacksDownVotes={listedFeedbacksDownVotes}
         allUsers={allUsers}
         userId={userId}
         addUpVote={addUpVote}
@@ -207,7 +221,8 @@ export default function MainTable({
         month={nextMonth}
         searchData={searchData}
         rows={month2}
-        listedFeedbacks={listedFeedbacks}
+        listedFeedbacksUpVotes={listedFeedbacksUpVotes}
+        listedFeedbacksDownVotes={listedFeedbacksDownVotes}
         allUsers={allUsers}
         userId={userId}
         addUpVote={addUpVote}
@@ -220,7 +235,8 @@ export default function MainTable({
         month={nextNextMonth}
         searchData={searchData}
         rows={month3}
-        listedFeedbacks={listedFeedbacks}
+        listedFeedbacksUpVotes={listedFeedbacksUpVotes}
+        listedFeedbacksDownVotes={listedFeedbacksDownVotes}
         allUsers={allUsers}
         userId={userId}
         addUpVote={addUpVote}

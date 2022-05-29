@@ -1,9 +1,5 @@
 const nameValidator = (value) => {
-  if (value.length > 8) {
-    return value;
-  } else {
-    return false;
-  }
+  return value;
 };
 
 const userNameValidator = (value) => {

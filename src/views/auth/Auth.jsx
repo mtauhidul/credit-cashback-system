@@ -34,9 +34,9 @@ const Auth = ({ getSpecificUser, getAllUsers, getAllRows }) => {
       if (property === 'name') {
         setUser({ ...user, name: response });
       } else if (property === 'userName') {
-        const user = users.find((user) => user.userName === response);
-        console.log(user);
-        if (!user) {
+        const userNameCheck = users.find((user) => user.userName === response);
+
+        if (!userNameCheck) {
           setUser({ ...user, userName: response });
         } else {
           setError('User name already exists');
@@ -60,6 +60,7 @@ const Auth = ({ getSpecificUser, getAllUsers, getAllRows }) => {
   };
 
   const formSubmit = (e) => {
+    console.log(user);
     e.preventDefault();
     const authForm = document.getElementById('authForm');
     if (authType === 'Registration') {
@@ -161,6 +162,7 @@ const Auth = ({ getSpecificUser, getAllUsers, getAllRows }) => {
         <br />
         {authType === 'Registration' && (
           <TextField
+            required
             className={styles.textField}
             id='outlined-basic'
             label='Name'
@@ -170,6 +172,7 @@ const Auth = ({ getSpecificUser, getAllUsers, getAllRows }) => {
         )}
         {authType === 'Registration' && (
           <TextField
+            required
             className={styles.textField}
             id='outlined-basic'
             label='User Name'
@@ -178,6 +181,7 @@ const Auth = ({ getSpecificUser, getAllUsers, getAllRows }) => {
           />
         )}
         <TextField
+          required
           className={styles.textField}
           id='outlined-basic'
           label='Email'
@@ -185,6 +189,7 @@ const Auth = ({ getSpecificUser, getAllUsers, getAllRows }) => {
           onBlur={(e) => formHelper('email', e.target.value)}
         />
         <TextField
+          required
           data-html={true}
           data-tip='<ul><li> ● At least eight characters long</li><li> ● Must have a capital letter</li><li> ● Must have a lowercase letter</li><li> ● Must have a special character</li><li> ● Must have a number</li></ul>'
           type='password'
@@ -195,15 +200,7 @@ const Auth = ({ getSpecificUser, getAllUsers, getAllRows }) => {
           onBlur={(e) => formHelper('password', e.target.value)}
         />
         <Button
-          disabled={
-            error === '' &&
-            user.name !== '' &&
-            user.userName !== '' &&
-            user.email !== '' &&
-            user.password !== ''
-              ? false
-              : true
-          }
+          type='submit'
           onClick={(e) => formSubmit(e)}
           variant='contained'>
           Submit

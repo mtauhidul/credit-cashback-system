@@ -1,8 +1,10 @@
 import {
   addDoc,
+  arrayRemove,
   arrayUnion,
   collection,
   doc,
+  getDoc,
   getDocs,
   getFirestore,
   increment,
@@ -111,60 +113,74 @@ export const createNewRow = async (row) => {
 //   return rowList;
 // };
 
-export const upVote = async (id, userId, ownerId) => {
-  try {
-    const docRef = await doc(db, 'rows', id);
-    const response = await updateDoc(docRef, {
-      upVote: increment(1),
-    });
-    await updateDoc(docRef, {
-      points: increment(1),
-    });
+export const voteNow = async (rowId, userId, ownerId, type) => {
+  const docRef = doc(db, 'users', userId);
+  const docSnap = await getDoc(docRef);
+  const user = docSnap.data().feedbacks;
+  const check = await user.find((feedback) => feedback?.rowId === rowId);
 
-    if (!response) {
-      const userRef = await doc(db, 'users', userId);
-      await updateDoc(userRef, {
-        feedbacks: arrayUnion(id),
+  const rowRef = await doc(db, 'rows', rowId);
+  const userRef = await doc(db, 'users', userId);
+  const ownerRef = await doc(db, 'users', ownerId);
+
+  if (!check) {
+    if (type === 'upVote') {
+      await updateDoc(rowRef, {
+        upVote: increment(1),
       });
-      const ownerRef = await doc(db, 'users', ownerId);
-      const output = await updateDoc(ownerRef, {
+      await updateDoc(rowRef, {
         points: increment(1),
       });
-      return output;
-    } else {
-      return new Error('Please try again!');
-    }
-  } catch (error) {
-    return error.message;
-  }
-};
-
-export const downVote = async (id, userId, ownerId) => {
-  try {
-    const docRef = await doc(db, 'rows', id);
-    const response = await updateDoc(docRef, {
-      downVote: increment(1),
-    });
-    await updateDoc(docRef, {
-      points: increment(-1),
-    });
-
-    if (!response) {
-      const userRef = await doc(db, 'users', userId);
       await updateDoc(userRef, {
-        feedbacks: arrayUnion(id),
+        feedbacks: arrayUnion({ rowId, type }),
       });
-      const ownerRef = await doc(db, 'users', ownerId);
-      const output = await updateDoc(ownerRef, {
+      await updateDoc(ownerRef, {
+        points: increment(1),
+      });
+    } else {
+      await updateDoc(rowRef, {
+        downVote: increment(1),
+      });
+      await updateDoc(rowRef, {
         points: increment(-1),
       });
-      return output;
-    } else {
-      return new Error('Please try again!');
+      await updateDoc(userRef, {
+        feedbacks: arrayUnion({ rowId, type }),
+      });
+      await updateDoc(ownerRef, {
+        points: increment(-1),
+      });
     }
-  } catch (error) {
-    return error.message;
+  } else {
+    if (type === 'upVote') {
+      await updateDoc(rowRef, {
+        upVote: increment(-1),
+      });
+      await updateDoc(rowRef, {
+        points: increment(-1),
+      });
+      await updateDoc(userRef, {
+        feedbacks: arrayRemove({ rowId, type }),
+      });
+      await updateDoc(ownerRef, {
+        points: increment(-1),
+      });
+    } else {
+      await updateDoc(rowRef, {
+        downVote: increment(-1),
+      });
+      await updateDoc(rowRef, {
+        points: increment(1),
+      });
+      await updateDoc(userRef, {
+        feedbacks: arrayRemove({ rowId, type }),
+      });
+      await updateDoc(ownerRef, {
+        points: increment(1),
+      });
+    }
   }
+  return false;
 };
 
 export const updateProfile = async (id, data) => {

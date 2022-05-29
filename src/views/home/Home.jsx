@@ -124,7 +124,10 @@ export default function Home() {
                         textTransform: 'capitalize',
                       }}
                       as={Link}
-                      to={`/table/${row.type.toLowerCase()}`}
+                      to={`/table/${row.type
+                        .toLowerCase()
+                        .split(' ')
+                        .join('_')}`}
                       align='center'
                       component='th'
                       scope='row'>
@@ -132,10 +135,14 @@ export default function Home() {
                     </TableCell>
                     <TableCell align='center'>{currentMonth}</TableCell>
                     <TableCell align='center'>{row?.card}</TableCell>
-                    <TableCell align='center'>{row?.cashback}%</TableCell>
+                    <TableCell align='center'>
+                      {row?.cashback}
+                      {row?.cashback && '%'}
+                    </TableCell>
                   </TableRow>
                 );
               })}
+              <TableRow></TableRow>
             </TableBody>
           ) : (
             <Box
