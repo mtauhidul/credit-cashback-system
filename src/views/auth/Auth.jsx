@@ -60,7 +60,6 @@ const Auth = ({ getSpecificUser, getAllUsers, getAllRows }) => {
   };
 
   const formSubmit = (e) => {
-    console.log(user);
     e.preventDefault();
     const authForm = document.getElementById('authForm');
     if (authType === 'Registration') {

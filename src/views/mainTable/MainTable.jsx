@@ -121,7 +121,6 @@ export default function MainTable({
         (row) => row.month === currentMonth
       );
       setMonth1(currentMonthRows);
-      console.log(nextMonth);
       const nextMonthRows = filteredRows.filter(
         (row) => row.month === nextMonth
       );
@@ -130,8 +129,6 @@ export default function MainTable({
         (row) => row.month === nextNextMonth
       );
       setMonth3(nextNextMonthRows);
-      console.log(filteredRows);
-      console.log(nextMonthRows);
     }
   }, [allRows, currentMonth, type]);
 

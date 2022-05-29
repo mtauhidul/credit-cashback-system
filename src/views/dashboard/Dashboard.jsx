@@ -13,7 +13,6 @@ import { updateProfile } from '../../utils/db';
 import styles from './dashboard.module.scss';
 
 const Dashboard = ({ getSpecificUser, getAllUsers, getAllRows }) => {
-  const [userProfile, setUserProfile] = useState({});
   const name = useSelector(selectName);
   const userName = useSelector(selectUserName);
   const id = useSelector(selectId);
@@ -49,15 +48,9 @@ const Dashboard = ({ getSpecificUser, getAllUsers, getAllRows }) => {
 
   const { userid } = useParams();
 
-  useEffect(() => {
-    console.log(allUsers);
-    const user = allUsers.find((user) => user.id === userid);
-    setUserProfile(user);
-  }, []);
+  const user = allUsers.find((user) => user.id === userid);
 
   const loggedUserId = window.localStorage.getItem('uid');
-
-  console.log(userProfile);
 
   return (
     <main className={styles.dashboard}>
@@ -65,22 +58,20 @@ const Dashboard = ({ getSpecificUser, getAllUsers, getAllRows }) => {
         <section className={styles.topSection}>
           <Avatar
             className={styles.avatar}
-            alt={userProfile?.name}
+            alt={user?.name}
             src='/static/images/avatar/1.jpg'
             sx={{ width: 100, height: 100, fontSize: '60px' }}
           />
           <div className={styles.userDetails}>
-            <h2>{userProfile?.name}</h2>
-            <div className={styles.pointsBox}>{userProfile?.points} POINTS</div>
+            <h2>{user?.name}</h2>
+            <div className={styles.pointsBox}>{user?.points} POINTS</div>
           </div>
         </section>
         <section className={styles.bottomSection}>
-          {id === userProfile?.id && (
-            <h3>User-Name : {userProfile?.userName}</h3>
-          )}
-          {id === userProfile?.id && <h3>User Email : {userProfile?.email}</h3>}
-          <h3>User Added Rows : {userProfile?.rows?.length}</h3>
-          <h3>User Given Feedbacks : {userProfile?.feedbacks?.length}</h3>
+          {id === user?.id && <h3>User-Name : {user?.userName}</h3>}
+          {id === user?.id && <h3>User Email : {user?.email}</h3>}
+          <h3>User Added Rows : {user?.rows?.length}</h3>
+          <h3>User Given Feedbacks : {user?.feedbacks?.length}</h3>
         </section>
 
         {loggedUserId === userid && (
